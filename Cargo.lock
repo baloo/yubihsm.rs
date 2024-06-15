@@ -1095,6 +1095,7 @@ dependencies = [
  "cbc",
  "ccm",
  "cmac",
+ "der",
  "digest",
  "ecdsa",
  "ed25519",
