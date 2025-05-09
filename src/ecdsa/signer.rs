@@ -25,7 +25,6 @@ use std::ops::Add;
 use super::{secp256k1::RecoveryId, Secp256k1};
 
 /// ECDSA signature provider for yubihsm-client
-#[derive(signature::Signer)]
 pub struct Signer<C>
 where
     C: EcdsaCurve + CurveArithmetic,
@@ -223,4 +222,16 @@ where
 
     const SIGNATURE_ALGORITHM_IDENTIFIER: AlgorithmIdentifier<Self::Params> =
         <VerifyingKey<C> as SignatureAlgorithmIdentifier>::SIGNATURE_ALGORITHM_IDENTIFIER;
+}
+
+impl<C, S> ::signature::Signer<S> for Signer<C>
+where
+    C: EcdsaCurve + CurveArithmetic,
+    FieldBytesSize<C>: sec1::ModulusSize,
+    S: signature::PrehashSignature,
+    Self: DigestSigner<S::Digest, S>,
+{
+    fn try_sign(&self, msg: &[u8]) -> signature::Result<S> {
+        self.try_sign_digest(S::Digest::new_with_prefix(msg))
+    }
 }
