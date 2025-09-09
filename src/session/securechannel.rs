@@ -62,7 +62,7 @@ pub(crate) const KEY_SIZE: usize = 16;
 /// the SCP03 protocol: 8-bytes. This small tag has an even smaller birthday
 /// bound on collisions, so to avoid these we force generation of fresh
 /// session keys after the following number of messages have been sent.
-pub const MAX_COMMANDS_PER_SESSION: u32 = 0x10_0000;
+pub const MAX_COMMANDS_PER_SESSION: u32 = u32::MAX;
 
 /// Size of an AES block (128-bits)
 const AES_BLOCK_SIZE: usize = 16;

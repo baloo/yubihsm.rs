@@ -17,7 +17,7 @@ pub use self::{
     error::{Error, ErrorKind},
     guard::Guard,
     id::Id,
-    securechannel::{Challenge, Context, SessionKeys},
+    securechannel::{Challenge, Context, SessionKeys, MAX_COMMANDS_PER_SESSION},
     timeout::Timeout,
 };
 
