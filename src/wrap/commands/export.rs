@@ -10,6 +10,10 @@ use crate::{
 };
 use serde::{Deserialize, Serialize};
 
+fn is_zero(value: &u8) -> bool {
+    *value == 0
+}
+
 /// Request parameters for `command::export_wrapped`
 #[derive(Serialize, Deserialize, Debug)]
 pub(crate) struct ExportWrappedCommand {
@@ -23,6 +27,7 @@ pub(crate) struct ExportWrappedCommand {
     pub object_id: object::Id,
 
     /// Export ED25519 key with its seed. Default is not to.
+    #[serde(skip_serializing_if = "is_zero")]
     pub include_seed: u8,
 }
 

@@ -21,6 +21,9 @@ where
     /// Verifying key which corresponds to this signer.
     verifying_key: VerifyingKey<S>,
 
+    /// Salt length used when signing messages
+    salt_len: Option<u16>,
+
     /// Algorithm used when signing messages
     _algorithm: PhantomData<S>,
 }
@@ -29,21 +32,43 @@ impl<S> Signer<S>
 where
     S: SignatureAlgorithm,
 {
-    /// Create a new YubiHSM-backed RSA-PSS signer
-    pub fn create(client: Client, signing_key_id: object::Id) -> Result<Self, Error> {
+    fn create_with_salt(
+        client: Client,
+        signing_key_id: object::Id,
+        salt_len: Option<u16>,
+    ) -> Result<Self, Error> {
         let public_key = client
             .get_public_key(signing_key_id)?
             .rsa()
             .ok_or_else(Error::new)?;
 
-        let verifying_key = VerifyingKey::<S>::new(public_key);
+        let verifying_key = if let Some(salt_len) = salt_len {
+            VerifyingKey::<S>::new_with_salt_len(public_key, salt_len.into())
+        } else {
+            VerifyingKey::<S>::new(public_key)
+        };
 
         Ok(Self {
             client,
             signing_key_id,
             verifying_key,
+            salt_len,
             _algorithm: PhantomData,
         })
+    }
+
+    /// Create a new YubiHSM-backed RSA-PSS signer
+    pub fn create(client: Client, signing_key_id: object::Id) -> Result<Self, Error> {
+        Self::create_with_salt(client, signing_key_id, None)
+    }
+
+    /// Create a new YubiHSM-backed RSA-PSS signer
+    pub fn create_with_salt_len(
+        client: Client,
+        signing_key_id: object::Id,
+        salt_len: u16,
+    ) -> Result<Self, Error> {
+        Self::create_with_salt(client, signing_key_id, Some(salt_len))
     }
 
     /// Return the RSA public key used by this signer
@@ -64,7 +89,7 @@ where
 {
     fn try_sign(&self, msg: &[u8]) -> Result<Signature, Error> {
         self.client
-            .sign_rsa_pss::<S>(self.signing_key_id, msg)?
+            .sign_rsa_pss::<S>(self.signing_key_id, msg, self.salt_len)?
             .as_slice()
             .try_into()
     }
