@@ -104,4 +104,4 @@ required-features = ["http-server", "usb"]
 [patch.crates-io]
 cmac = { git = "https://github.com/RustCrypto/MACs.git" }
 
-yubikey = { git = "https://github.com/baloo/yubikey.rs", branch = "baloo/yubihsm-auth"}
+yubikey = { git = "https://github.com/baloo/yubikey.rs", branch = "baloo/bump-2026-03-16" }
