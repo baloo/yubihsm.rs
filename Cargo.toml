@@ -96,4 +96,4 @@ name = "connector_http_server"
 required-features = ["http-server", "usb"]
 
 [patch.crates-io]
-yubikey = { git = "https://github.com/baloo/yubikey.rs", branch = "baloo/yubihsm-auth"}
+yubikey = { git = "https://github.com/baloo/yubikey.rs", branch = "baloo/bump-2026-01-07"}

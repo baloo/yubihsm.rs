@@ -1214,7 +1214,7 @@ dependencies = [
 [[package]]
 name = "yubikey"
 version = "0.8.0"
-source = "git+https://github.com/baloo/yubikey.rs?branch=baloo%2Fyubihsm-auth#b298c1d3ec57e71c719ee22aee1fa24f42cb729b"
+source = "git+https://github.com/baloo/yubikey.rs?branch=baloo%2Fbump-2026-01-07#2bf413aeed78c4fc8f7e4038d332be4c1f369771"
 dependencies = [
  "aes",
  "base16ct 0.2.0",
